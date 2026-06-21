@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>IPTV Player ของฉัน</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        body {
+            background-color: #121212;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding-top: 50px;
+        }
+        video {
+            width: 80%;
+            max-width: 800px;
+            border: 2px solid #333;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <h2>รับชมช่อง IPTV</h2>
+    
+    <video id="video" controls autoplay></video>
+
+    <script>
+        var video = document.getElementById('video');
+        // ใส่ลิงก์ของคุณที่เติม .m3u8 แล้ว
+        var videoSrc = 'https://raw.githubusercontent.com/prachyak13/image/refs/heads/main/mono4.m3u8';
+
+        if (Hls.isSupported()) {
+            var hls = new Hls();
+            hls.loadSource(videoSrc);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                video.play();
+            });
+            
+            // แจ้งเตือนหากเกิด Error
+            hls.on(Hls.Events.ERROR, function (event, data) {
+                if (data.fatal) {
+                    console.error("เกิดข้อผิดพลาดในการโหลดสตรีม: ", data);
+                    alert("ไม่สามารถโหลดวิดีโอได้ (อาจเกิดจากปัญหา CORS หรือลิงก์หมดอายุ) ลองดูวิธีแก้ปัญหาด้านล่างครับ");
+                }
+            });
+        }
+        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = videoSrc;
+            video.addEventListener('loadedmetadata', function() {
+                video.play();
+            });
+        }
+    </script>
+
+</body>
+</html>
